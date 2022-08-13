@@ -43,6 +43,15 @@ const setTargetStudents = function (studentNumber) {
 
 document.getElementById("btn-start").addEventListener("click", () => {
   const studentNumber = document.querySelector("#studentNumber").value;
+  if (studentNumber === "") {
+    alert("人数が未入力です。入力してからスタートボタンを押してください");
+    return false;
+  }
+
+  if (studentNumber > 50) {
+    alert("人数は50人以内にしてください");
+    return false;
+  }
   setTargetStudents(studentNumber);
   document.querySelector(".c-overlay").classList.add("is-closed");
   const timer = setInterval(function(){

@@ -1,5 +1,5 @@
 // forEachを用いた実装法
-const studentNumberList = [];
+let studentNumberList = [];
 
 const shuffleArray = function () {
   for (let i = studentNumberList.length; i > 0; i--) {
@@ -32,6 +32,13 @@ const setTargetStudents = function (studentNumber) {
   for (let i = 1; i <= studentNumber; i++) {
     studentNumberList.push(i);
   }
+  const absenteeNumbers = document.querySelector("#absence").value;
+  const absenteeNumberList = absenteeNumbers.split(",").map((value) => {
+    return parseInt(value);
+  })
+  studentNumberList = studentNumberList.filter((value, index, array) => {
+    return !absenteeNumberList.includes(value);
+  })
 }
 
 document.getElementById("btn-start").addEventListener("click", () => {

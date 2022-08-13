@@ -1,34 +1,7 @@
 // forEachを用いた実装法
-let studentNumberList = [];
+const setTargetStudents = studentNumber => {
+  let studentNumberList = [];
 
-const shuffleArray = function () {
-  for (let i = studentNumberList.length; i > 0; i--) {
-    const randomNum = Math.floor(Math.random() * i);
-    let tmp = studentNumberList[i - 1];
-    studentNumberList[i - 1] = studentNumberList[randomNum];
-    studentNumberList[randomNum] = tmp;
-  }
-}
-
-const showSeatBoxes = function () {
-  let htmlStr = "";
-  studentNumberList.forEach((val) => {
-    htmlStr += '<div class="seat__item">' + val + '</div>'
-  })
-  document.querySelector("#seat").innerHTML = htmlStr;
-}
-
-const soundPlay = function (timer){
-  const audioElement = new Audio();
-  audioElement.src = 'assets/audio/drum.mp3';
-  audioElement.play();
-
-  audioElement.addEventListener("ended", () => {
-    clearInterval(timer)
-  })
-}
-
-const setTargetStudents = function (studentNumber) {
   for (let i = 1; i <= studentNumber; i++) {
     studentNumberList.push(i);
   }
@@ -39,24 +12,57 @@ const setTargetStudents = function (studentNumber) {
   studentNumberList = studentNumberList.filter((value, index, array) => {
     return !absenteeNumberList.includes(value);
   })
+  return studentNumberList;
 }
+
+const shuffleArray = studentNumberList => {
+  for (let i = studentNumberList.length; i > 0; i--) {
+    const randomNum = Math.floor(Math.random() * i);
+    let tmp = studentNumberList[i - 1];
+    studentNumberList[i - 1] = studentNumberList[randomNum];
+    studentNumberList[randomNum] = tmp;
+  }
+  return studentNumberList;
+}
+
+const showSeatBoxes = shuffleStudent => {
+  let htmlStr = "";
+  shuffleStudent.forEach((val) => {
+    htmlStr += `<div class="seat__item">${val}</div>`
+  })
+  document.querySelector("#seat").innerHTML = htmlStr;
+}
+
+const soundPlay = timer => {
+  const audioElement = new Audio();
+  audioElement.src = 'assets/audio/drum.mp3';
+  audioElement.play();
+
+  audioElement.addEventListener("ended", () => {
+    clearInterval(timer)
+  })
+}
+
 
 document.getElementById("btn-start").addEventListener("click", () => {
   const studentNumber = document.querySelector("#studentNumber").value;
-  if (studentNumber === "") {
+  const studentNumberIsEmpty = studentNumber === "";
+  const studentUpperlimit = 50;
+
+  if (studentNumberIsEmpty) {
     alert("人数が未入力です。入力してからスタートボタンを押してください");
     return false;
   }
 
-  if (studentNumber > 50) {
-    alert("人数は50人以内にしてください");
+  if (studentNumber > studentUpperlimit) {
+    alert(`人数は${studentUpperlimit}人以内にしてください!`);
     return false;
   }
-  setTargetStudents(studentNumber);
+  const studentNumberList = setTargetStudents(studentNumber);
   document.querySelector(".c-overlay").classList.add("is-closed");
-  const timer = setInterval(function(){
-    shuffleArray();
-    showSeatBoxes();
+  const timer = setInterval(() => {
+    const shuffleStudent = shuffleArray(studentNumberList);
+    showSeatBoxes(shuffleStudent);
   }, 50);
 
   soundPlay(timer);

@@ -1,18 +1,18 @@
 // forEachを用いた実装法
-const studentNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+const studentNumberList = [];
 
 const shuffleArray = function () {
-  for (let i = studentNumbers.length; i > 0; i--) {
+  for (let i = studentNumberList.length; i > 0; i--) {
     const randomNum = Math.floor(Math.random() * i);
-    let tmp = studentNumbers[i - 1];
-    studentNumbers[i - 1] = studentNumbers[randomNum];
-    studentNumbers[randomNum] = tmp;
+    let tmp = studentNumberList[i - 1];
+    studentNumberList[i - 1] = studentNumberList[randomNum];
+    studentNumberList[randomNum] = tmp;
   }
 }
 
 const showSeatBoxes = function () {
   let htmlStr = "";
-  studentNumbers.forEach((val) => {
+  studentNumberList.forEach((val) => {
     htmlStr += '<div class="seat__item">' + val + '</div>'
   })
   document.querySelector("#seat").innerHTML = htmlStr;
@@ -28,7 +28,16 @@ const soundPlay = function (timer){
   })
 }
 
+const setTargetStudents = function (studentNumber) {
+  for (let i = 1; i <= studentNumber; i++) {
+    studentNumberList.push(i);
+  }
+}
+
 document.getElementById("btn-start").addEventListener("click", () => {
+  const studentNumber = document.querySelector("#studentNumber").value;
+  setTargetStudents(studentNumber);
+  document.querySelector(".c-overlay").classList.add("is-closed");
   const timer = setInterval(function(){
     shuffleArray();
     showSeatBoxes();
@@ -36,6 +45,9 @@ document.getElementById("btn-start").addEventListener("click", () => {
 
   soundPlay(timer);
 })
+
+
+
 
 // for文を用いた実装法
 // let htmlStr = "";
